@@ -1,0 +1,7 @@
+.button {        
+    cursor: pointer;
+
+    &:hover {            
+        border: 1px solid $border-color;            
+    }
+}

@@ -1,0 +1,52 @@
+.tools {
+  position: absolute;
+  width: 14em;         
+  box-shadow: $box-shadow;
+  top: 80px;
+  left: 30px;
+
+  &__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+
+  &__item {
+    box-sizing: border-box;
+    height: 3em;                
+    margin-bottom: 0.5em;
+    line-height: 3em;
+    padding-left: 3.5em;   
+    font-family: "Roboto", sans-serif;
+    
+    &:hover {
+      border: 1px solid $border-color;
+      cursor: pointer;
+    }
+
+    &--separator {
+      height: 1em;            
+      background: url("~../public/images/separator_line.svg") repeat-x;
+    }
+
+    &--paint-bucket {
+        background: url("~../public/images/icon_paint_bucket.svg") no-repeat 1em center;
+    }
+
+    &--choose-color {
+      background: url("~../public/images/icon_choos_color.svg") no-repeat 1em center;
+    }
+
+    &--move {
+      background: url("~../public/images/icon_move.svg") no-repeat 1em center;
+    }
+
+    &--pensil {
+      background: url("~../public/images/icon_pensil.svg") no-repeat 1em center;
+    }
+
+    &--transform {
+      background: url("~../public/images/icon_transform.svg") no-repeat 1em center;
+    }
+  }
+}

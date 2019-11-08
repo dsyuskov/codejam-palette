@@ -1,0 +1,50 @@
+.colors {
+  position: absolute;
+  width: 14em;         
+  box-shadow: $box-shadow;
+  top: 420px;
+  left: 30px;
+
+  &__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+
+  &__item {
+    box-sizing: border-box;
+    align-items: center;
+    display: flex;
+    height: 3em;
+    margin-bottom: 0.5em;
+    line-height: 3em;    
+    font-family: "Roboto", sans-serif;
+
+    &:hover {
+      border: 1px solid $border-color;
+      cursor: pointer;
+    }
+
+    span {
+      width: 20px;
+      height: 20px;   
+      border: 2px solid black;   
+      border-radius: 50%;
+      margin-left: 1.3em;
+      margin-right: 1.3em;
+    }
+
+    &--separator {
+        height: 1em;        
+        background: url("~../public/images/separator_line.svg") repeat-x;
+    }
+    
+    &--red {            
+      background: red;      
+    }
+
+    &--blue {
+      background: blue;
+    }
+  }
+}

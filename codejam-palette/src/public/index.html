@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="ie=edge" http-equiv="X-UA-Compatible">
+        <link href="style.css" rel="stylesheet">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <main>
+            <nav class="nav-bar">
+                <div class="nav-bar__tools button"></div>
+                <div class="nav-bar__page-title">CodeJam - Pallete</div>
+                <div class="nav-bar__menu button"></div>
+            </nav>
+
+            <div class="workspace">
+                <div class="tools">
+                    <ul class="tools__list">
+                        <li class="tools__item tools__item--paint-bucket">Paint bucket</li>
+                        <li class="tools__item tools__item--choose-color">Choose color</li>
+                        <li class="tools__item tools__item--separator"></li>
+                        <li class="tools__item tools__item--pensil">Pensil</li>
+                        <li class="tools__item tools__item--move">Move</li>
+                        <li class="tools__item tools__item--transform">Transform</li>
+                    </ul>
+                </div>
+
+                <div class="colors">
+                    <ul class="colors__list">
+                        <li class="colors__item"><span class="colors__item--current"></span>Current color</li>
+                        <li class="colors__item"><span class="colors__item--prev"></span>Prev color</li>
+                        <li class="colors__item colors__item--separator"></li>
+                        <li class="colors__item"><span class="colors__item--red"></span>red</li>
+                        <li class="colors__item"><span class="colors__item--blue"></span>blue</li>
+                    </ul>
+                </div>
+
+                <canvas height="512" id="canvas" width="512"></canvas>
+
+            </div>
+            <script src="bundle.js" type="text/javascript"></script>
+        </main>
+    </body>
+</html>
