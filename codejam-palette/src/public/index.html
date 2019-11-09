@@ -30,11 +30,13 @@
 
                 <div class="colors">
                     <ul class="colors__list">
-                        <li class="colors__item"><span class="colors__item--current"></span>Current color</li>
-                        <li class="colors__item"><span class="colors__item--prev"></span>Prev color</li>
+                        <li class="colors__item colors__item--current" data-color="current"><span></span><input id="current-color" type="color">Current color</label></li>
+                        <li class="colors__item colors__item--prev" data-color="prev"><span></span>Prev color</li>
                         <li class="colors__item colors__item--separator"></li>
-                        <li class="colors__item"><span class="colors__item--red"></span>red</li>
-                        <li class="colors__item"><span class="colors__item--blue"></span>blue</li>
+                        <li class="colors__item" data-color="#ff0000"><span></span>red</li>
+                        <li class="colors__item" data-color="#0000ff"><span></span>blue</li>
+                        <li class="colors__item" data-color="#00ff00"><span></span>green</li>
+                        <li class="colors__item" data-color="#ffff00"><span></span>yellow</li>
                     </ul>
                 </div>
 

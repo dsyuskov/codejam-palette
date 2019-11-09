@@ -37,14 +37,10 @@
     &--separator {
         height: 1em;        
         background: url("~../public/images/separator_line.svg") repeat-x;
-    }
-    
-    &--red {            
-      background: red;      
-    }
-
-    &--blue {
-      background: blue;
-    }
+    } 
   }
+}
+
+#current-color {
+  display: none;
 }
