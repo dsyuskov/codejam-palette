@@ -1,5 +1,46 @@
 import '../scss/main.scss';
-const canvas = document.getElementById("canvas").getContext('2d');
+let selectedTool = localStorage.getItem('selectedTools') ? localStorage.getItem('selectedTools') : 'pensil';
+
+let selectedColor = 'red';
+let sizePixel = 512 / 32;
+
+const canvas = document.getElementById("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+
+const ctx = canvas.getContext('2d');  
+
+//--------tools-------------
+function selectTools(selectedItem) {
+  tools.forEach((item) => {
+    item.classList.remove('selected');
+  });
+  selectedItem.classList.add('selected');  
+}
+
+const tools = document.querySelectorAll('.tools__item');
+  tools.forEach((item) => {
+    const {type} = item.dataset;
+    if ( type === selectedTool) {
+      item.classList.add('selected');
+    }
+
+    item.addEventListener('click', () => {        
+        selectTools(item);
+        selectedTool = type;
+        localStorage.setItem('selectedTools', selectedTool);
+    });
+});   
+
+
+
+
+
+
+
+
+
+
 
 document.querySelectorAll('.panel__item').forEach(item => {
     item.addEventListener('click', () => {
