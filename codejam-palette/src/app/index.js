@@ -1,39 +1,129 @@
 import '../scss/main.scss';
-let selectedTool = localStorage.getItem('selectedTools') ? localStorage.getItem('selectedTools') : 'pensil';
+let canvasWidth = 512;
+let canvasHeight = 512;
+let pixelSize = 32;
 
-let selectedColor = 'red';
-let sizePixel = 512 / 32;
+//let currentTool = localStorage.getItem('currentTool') ? localStorage.getItem('currentTool') : 'pensil';
+let currentTool = 'pensil';
+let unSelectTools = unSelectPensil;
+
+let currentColor = 'blue';
+let prevColor = 'green';
+
+let isDrawing = false;
 
 const canvas = document.getElementById("canvas");
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
 
 const ctx = canvas.getContext('2d');  
 
 //--------tools-------------
-function selectTools(selectedItem) {
-  tools.forEach((item) => {
-    item.classList.remove('selected');
-  });
-  selectedItem.classList.add('selected');  
+function selectTool(item) {    
+  document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
+  item.classList.add('selected');
+  
+  unSelectTools();  
+  currentTool = item.dataset.type;
+  localStorage.setItem('currentTool', currentTool);
+
+  switch(item.dataset.type) {
+    case 'paint-bucket': {   
+      selectPaintBucket();
+      unSelectTools = unSelectPaintBucket; 
+      break;
+    }
+    case 'choose-color': {      
+      selectPaintBucket();
+      unSelectTools = unSelectPaintBucket; 
+      break;
+    }
+    case 'pensil': {      
+      selectPensil();
+      unSelectTools = unSelectPensil; 
+      break;
+    }
+    case 'move': {      
+      selectPaintBucket();
+      unSelectTools = unSelectPaintBucket;
+      break;
+    }
+    case 'transform': {      
+      selectPensil();
+      unSelectTools = unSelectPensil; 
+      break;
+    }
+    default: {
+      selectPensil();
+      unSelectTools = unSelectPensil; 
+    }
+  }  
+}
+ 
+document.querySelectorAll('.tools__item').forEach((item) => { 
+    item.addEventListener('click', () => selectTool(item)); 
+    if (item.dataset.type === currentTool) {
+      item.classList.add('selected');
+      selectPensil();
+    }
+});
+
+let lastX = 0;
+let lastY = 0;
+
+function selectPaintBucket() {
+  console.log('paint-bucket');
 }
 
-const tools = document.querySelectorAll('.tools__item');
-  tools.forEach((item) => {
-    const {type} = item.dataset;
-    if ( type === selectedTool) {
-      item.classList.add('selected');
-    }
+function unSelectPaintBucket() {
+  console.log('paint-bucket');
+}
 
-    item.addEventListener('click', () => {        
-        selectTools(item);
-        selectedTool = type;
-        localStorage.setItem('selectedTools', selectedTool);
-    });
-});   
+function selectChooseColor(){}
+function unSelectChooseColor(){}
+
+function selectPensil() {    
+  canvas.addEventListener('mousedown', startPensil);  
+  canvas.addEventListener('mousemove', drawPensil);  
+  canvas.addEventListener('mouseup', stopPensil);
+  canvas.addEventListener('mouseout', stopPensil);
+}
+function unSelectPensil() {    
+  canvas.removeEventListener('mousedown', startPensil);  
+  canvas.removeEventListener('mousemove', drawPensil);  
+  canvas.removeEventListener('mouseup', stopPensil);
+  canvas.removeEventListener('mouseout', stopPensil);
+}
+
+function selectMove(){}
+function unSelectMove(){}
+
+function selectTransform(){}
+function unSelectTransform(){}
 
 
+function startPensil(event) {
+  let startX = Math.floor(event.offsetX / pixelSize) * pixelSize;
+  let startY = Math.floor(event.offsetY / pixelSize) * pixelSize;
+  drawPixel(ctx, startX, startY, pixelSize, currentColor);
+  lastX = startX;
+  lastY = startY;
+  isDrawing = true;
+}
 
+function drawPensil(event) {
+  let startX = Math.floor(event.offsetX / pixelSize) * pixelSize;
+  let startY = Math.floor(event.offsetY / pixelSize) * pixelSize;
+  if (isDrawing) {
+    drawLine(lastX, lastY, startX, startY);
+  }  
+  lastX = startX;
+  lastY = startY;   
+}
+
+function stopPensil() {
+  isDrawing = false;  
+}
 
 
 
@@ -71,13 +161,38 @@ const hex2rgba = (hex, alpha = 1) => {
 };
 
 function drawPixel(canvas, startX, startY, sizePixel, color) {
-    if (color.length === 6) {
-        canvas.fillStyle = hex2rgba(color);
-    } else {
-        canvas.fillStyle = `rgba(${color})`;
-    }
-    canvas.fillRect(startX, startY, sizePixel, sizePixel);
+  canvas.fillStyle = color;
+  canvas.fillRect(startX, startY, sizePixel, sizePixel);
 }
+
+function drawLine(x1, y1, x2, y2) {
+  
+  var deltaX = Math.abs(x2 - x1);
+  var deltaY = Math.abs(y2 - y1);
+  var signX = x1 < x2 ? 1 : -1;
+  var signY = y1 < y2 ? 1 : -1;
+  //
+  var error = deltaX - deltaY;
+  //
+  drawPixel(ctx, x2, y2, pixelSize, currentColor);
+  while(x1 != x2 || y1 != y2) 
+ {      
+      drawPixel(ctx, x1, y1, pixelSize, currentColor);
+      var error2 = error * 2;
+      //
+      if(error2 > -deltaY) 
+      {
+          error -= deltaY;
+          x1 += signX;
+      }
+      if(error2 < deltaX) 
+      {
+          error += deltaX;
+          y1 += signY;
+      }
+  }
+}
+
 
 function drawImage(canvas, dataArray) {
     let sizePixel = 0;
