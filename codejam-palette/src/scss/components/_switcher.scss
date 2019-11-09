@@ -1,0 +1,31 @@
+.switcher {
+  position: absolute;
+  width: 14em;         
+  box-shadow: $box-shadow;
+  top: 80px;
+  left: 1000px;
+
+  &__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+
+  &__item {
+    box-sizing: border-box;
+    height: 3em;                
+    margin-bottom: 0.5em;
+    line-height: 3em;
+    padding-left: 3.5em;   
+    font-family: "Roboto", sans-serif;
+    
+    &:hover {
+      border: 1px solid $border-color;
+      cursor: pointer;
+    }
+  }
+}
+
+.selected {
+  border: 1px solid $border-color;
+}

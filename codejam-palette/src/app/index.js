@@ -2,8 +2,8 @@ import '../scss/main.scss';
 
 let canvasWidth = 512;
 let canvasHeight = 512;
-let pixelCount = 16;
-let pixelSize = canvasWidth / pixelCount;
+let canvasSize = localStorage.getItem('canvasSize') ? localStorage.getItem('canvasSize') : 4;
+let pixelSize = canvasWidth / canvasSize;
 let image = [];
 //let currentTool = localStorage.getItem('currentTool') ? localStorage.getItem('currentTool') : 'pensil';
 let currentTool = 'pensil';
@@ -23,7 +23,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');  
 canvasClear();
 
-//--------tools-------------
+//--------panel-tools-------------
 function selectTool(item) {
   document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
   item.classList.add('selected');
@@ -72,12 +72,27 @@ document.querySelectorAll('.tools__item').forEach((item) => {
       selectPensil();
     }
 });
-//--------colors------------
-const currentColorInput = document.getElementById('current-color');
-currentColorInput.addEventListener('change', (item) => {
-  changeColor(item.target.value)
+
+//--------panel-switcher----
+function selectSwitcher(item) {    
+  document.querySelector(`.switcher__item--${canvasSize}`).classList.remove('selected');
+  item.classList.add('selected');
+
+  canvasSize = item.dataset.canvassize;
+  pixelSize = canvasWidth / canvasSize;    
+  canvasClear();       
+  localStorage.setItem('canvasSize',canvasSize);
+}
+
+document.querySelectorAll('.switcher__item').forEach(item => {
+  item.addEventListener('click', () => selectSwitcher(item));
+    
+  if (item.dataset.canvassize == canvasSize) {    
+    item.classList.add('selected');        
+  } 
 });
 
+//--------panel-colors------------
 function selectColor(item) {  
   if (item.firstChild !== null) {
     switch(item.dataset.color) {
@@ -86,12 +101,8 @@ function selectColor(item) {
         currentColorElement.style.backgroundColor = currentColor;   
         break;
       }
-      case 'prev': {        
-        let cur = currentColor;
-        currentColor = prevColor;
-        prevColor = cur;
-        currentColorElement.style.backgroundColor = currentColor;
-        prevColorElement.style.backgroundColor = prevColor;
+      case 'prev': {                
+        changeColor(prevColor);
         break;
       }
       default: {
@@ -100,6 +111,12 @@ function selectColor(item) {
     }
   }
 }
+
+const currentColorInput = document.getElementById('current-color');
+currentColorInput.addEventListener('change', (item) => {
+  changeColor(item.target.value)
+});
+
 
 document.querySelectorAll('.colors__item').forEach((item) => {   
   item.addEventListener('click', () => selectColor(item));
@@ -152,8 +169,7 @@ function unSelectPensil() {
   canvas.removeEventListener('mouseout', stopPensil);
 }
 
-function selectMove(){
-  save();
+function selectMove(){  
 }
 function unSelectMove(){}
 
@@ -201,46 +217,15 @@ function stopPensil() {
   isDrawing = false;  
 }
 
-
-
-function save() {  
-  canvasClear(pixelCount);  
-}
-
 function canvasClear() {
-  for (let i = 0; i <= pixelCount; i++){
+  for (let i = 0; i <= canvasSize; i++){
     image[i] = [];
-    for (let j = 0; j <= pixelCount; j++){
+    for (let j = 0; j <= canvasSize; j++){
       image[i][j] = '#ffffff';
       drawPixel(ctx, i, j, pixelSize, '#ffffff')
     }
   }
 }
-
-save();
-
-document.querySelectorAll('.panel__item').forEach(item => {
-    item.addEventListener('click', () => {
-        const { type, url } = item.dataset;
-
-        switch (type) {
-            case 'color':
-                fetch(url).then(response => response.json()).then(data => drawImage(canvas, data));
-                break;
-
-            case 'image':
-                const img = new Image();
-                img.onload = function () {
-                    canvas.drawImage(img, 0, 0, 512, 512);
-                }
-                img.src = url;
-                break;
-
-            default:
-                break;
-        }
-    });
-});
 
 const hex2rgba = (hex, alpha = 1) => {
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
@@ -265,7 +250,8 @@ function drawLine(x1, y1, x2, y2) {
   let signX = x1 < x2 ? 1 : -1;
   let signY = y1 < y2 ? 1 : -1;
   let error = deltaX - deltaY;
-  
+
+  drawPixel(ctx, x2, y2, pixelSize, currentColor);
   while(x1 != x2 || y1 != y2) {      
     drawPixel(ctx, x1, y1, pixelSize, currentColor);
     let error2 = error * 2;
