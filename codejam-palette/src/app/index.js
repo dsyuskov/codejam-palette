@@ -20,9 +20,9 @@ const canvas = document.getElementById("canvas");
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
 
+
 const ctx = canvas.getContext('2d');  
 canvasClear();
-
 //--------panel-tools-------------
 function selectTool(item) {
   document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
@@ -141,11 +141,11 @@ document.querySelectorAll('.colors__item').forEach((item) => {
 });
 
 function selectPaintBucket() {
-  console.log('paint-bucket');
+  canvas.addEventListener('mousedown', paintBucket);  
 }
 
 function unSelectPaintBucket() {
-  console.log('paint-bucket');
+  canvas.removeEventListener('mousedown', paintBucket);  
 }
 
 function selectChooseColor(){
@@ -179,7 +179,7 @@ function unSelectTransform(){}
 //-----------chooce-color----------
 function chooseColor(event){
   let {x, y} = getPos(event);
-  changeColor( image[x][y]);  
+  changeColor(image[x][y]);  
 }
 function changeColor(color) {  
   if (currentColor !== color) {
@@ -191,7 +191,11 @@ function changeColor(color) {
     prevColorElement.style.backgroundColor = prevColor;    
   }  
 }
-
+//-------paint-bucket-----
+function paintBucket(event) {
+  let {x, y} = getPos(event);  
+  fill(x, y, image[x][y], currentColor);  
+}
 //------------pensil----------
 let lastX = 0;
 let lastY = 0;
@@ -218,9 +222,9 @@ function stopPensil() {
 }
 
 function canvasClear() {
-  for (let i = 0; i <= canvasSize; i++){
+  for (let i = 0; i < canvasSize; i++){
     image[i] = [];
-    for (let j = 0; j <= canvasSize; j++){
+    for (let j = 0; j < canvasSize; j++){
       image[i][j] = '#ffffff';
       drawPixel(ctx, i, j, pixelSize, '#ffffff')
     }
@@ -282,3 +286,35 @@ function drawImage(canvas, dataArray) {
         x = 0;
     }
 }
+
+function fill(x, y, oldColor, newColor){ // Функция заливки многоугольника цветом color  
+  let stack = [[x,y]];
+  for ( let i = 0; i != stack.length; i++) {    
+    let x = stack[i][0], y = stack[i][1];          
+    if( x>= 0 && y >= 0 && x < canvasSize && y < canvasSize && image[x][y] == oldColor){
+      drawPixel(ctx, x, y, pixelSize, newColor);
+      let s = stack.length;
+      stack[s] = [x+1, y];
+      stack[s+1] = [x-1, y];
+      stack[s+2] = [x, y+1];
+      stack[s+3] = [x, y-1];
+    }
+  }
+}
+/*
+function fill({x, y}, state, dispatch) {
+  let targetColor = state.picture.pixel(x, y);
+  let drawn = [{x, y, color: state.color}];
+  for (let done = 0; done < drawn.length; done++) {
+    for (let {dx, dy} of around) {
+      let x = drawn[done].x + dx, y = drawn[done].y + dy;
+      if (x >= 0 && x < state.picture.width &&
+          y >= 0 && y < state.picture.height &&
+          state.picture.pixel(x, y) == targetColor &&
+          !drawn.some(p => p.x == x && p.y == y)) {
+        drawn.push({x, y, color: state.color});
+      }
+    }
+  }
+  dispatch({picture: state.picture.draw(drawn)});
+}*/
