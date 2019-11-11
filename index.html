@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="style.css" rel="stylesheet">
+    <title>Document</title>
+  <link href="style.css" rel="stylesheet"></head>
+
+  <body>
+    <main>
+      <nav class="nav-bar">
+        <div class="nav-bar__tools button"></div>
+        <div class="nav-bar__page-title">CodeJam - Pallete</div>
+        <div class="nav-bar__menu button"></div>
+      </nav>
+
+      <div class="workspace">
+        <div class="tools">
+            <ul class="tools__list">
+              <li class="tools__item tools__item--paint-bucket" data-type="paint-bucket">Paint bucket</li>
+              <li class="tools__item tools__item--choose-color" data-type="choose-color">Choose color</li>
+              <li class="tools__item tools__item--separator"></li>
+              <li class="tools__item tools__item--pensil" data-type="pensil">Pensil</li>
+              <li class="tools__item tools__item--move" data-type="move">Move</li>
+              <li class="tools__item tools__item--save" data-type="save">Save</li>
+            </ul>
+          </div>
+
+          <div class="colors">
+            <ul class="colors__list">
+              <li class="colors__item colors__item--current" data-color="current"><span></span><input id="current-color" type="color">Current color</label></li>
+              <li class="colors__item colors__item--prev" data-color="prev"><span></span>Prev color</li>
+              <li class="colors__item colors__item--separator"></li>
+              <li class="colors__item" data-color="#ff0000"><span></span>red</li>
+              <li class="colors__item" data-color="#0000ff"><span></span>blue</li>
+              <li class="colors__item" data-color="#00ff00"><span></span>green</li>
+              <li class="colors__item" data-color="#ffff00"><span></span>yellow</li>
+            </ul>
+          </div>
+
+          <div class="panel switcher">
+            <ul class="switcher__list">
+                <li class="switcher__item switcher__item--4" data-canvassize="4">4 x 4</li>
+                <li class="switcher__item switcher__item--32" data-canvassize="32">32 x 32</li>
+                <li class="switcher__item switcher__item--64" data-canvassize="64">64 x 64</li>
+                <li class="switcher__item switcher__item--256" data-canvassize="256">256 x 256</li>
+            </ul>
+        </div>
+
+          <canvas height="512" id="canvas" width="512"></canvas>
+
+      </div>
+      <script src="bundle.js" type="text/javascript"></script>
+    </main>
+  <script type="text/javascript" src="bundle.js"></script></body>
+</html>
