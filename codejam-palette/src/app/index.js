@@ -24,15 +24,14 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');  
 canvasClear();
 //--------panel-tools-------------
-function selectTool(item) {
+function selectTool(tool) {  
   document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
-  item.classList.add('selected');
-  
-  unSelectTools();  
-  currentTool = item.dataset.type;
+   
+  unSelectTools();    
+  currentTool = tool;
+  document.querySelector(`.tools__item--${currentTool}`).classList.add('selected');
   localStorage.setItem('currentTool', currentTool);
-
-  switch(item.dataset.type) {
+  switch(tool) {  
     case 'paint-bucket': {   
       selectPaintBucket();
       unSelectTools = unSelectPaintBucket; 
@@ -66,7 +65,7 @@ function selectTool(item) {
 }
 
 document.querySelectorAll('.tools__item').forEach((item) => {   
-    item.addEventListener('click', () => selectTool(item)); 
+    item.addEventListener('click', () => selectTool(item.dataset.type)); 
     if (item.dataset.type === currentTool) {
       item.classList.add('selected');
       selectPensil();
@@ -301,20 +300,21 @@ function fill(x, y, oldColor, newColor){ // Функция заливки мно
     }
   }
 }
-/*
-function fill({x, y}, state, dispatch) {
-  let targetColor = state.picture.pixel(x, y);
-  let drawn = [{x, y, color: state.color}];
-  for (let done = 0; done < drawn.length; done++) {
-    for (let {dx, dy} of around) {
-      let x = drawn[done].x + dx, y = drawn[done].y + dy;
-      if (x >= 0 && x < state.picture.width &&
-          y >= 0 && y < state.picture.height &&
-          state.picture.pixel(x, y) == targetColor &&
-          !drawn.some(p => p.x == x && p.y == y)) {
-        drawn.push({x, y, color: state.color});
-      }
+function setHotKey(keyCode) {    
+  switch(keyCode) {
+    case 'KeyP': {      
+      selectTool('pensil')
+      break;
     }
+    case 'KeyB':{
+      selectTool('paint-bucket');
+      break
+    }
+    case 'KeyC': {
+      currentColorInput.click();
+      break;
+    }
+    default:
   }
-  dispatch({picture: state.picture.draw(drawn)});
-}*/
+}
+document.addEventListener('keydown', (event) => setHotKey(event.code));
