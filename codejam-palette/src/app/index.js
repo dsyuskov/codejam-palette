@@ -4,7 +4,9 @@ let canvasWidth = 512;
 let canvasHeight = 512;
 let canvasSize = localStorage.getItem('canvasSize') ? localStorage.getItem('canvasSize') : 4;
 let pixelSize = canvasWidth / canvasSize;
-let image = [];
+let image = localStorage.getItem('image') ? loadImage(): [];
+
+console.log(localStorage.getItem('image'));
 //let currentTool = localStorage.getItem('currentTool') ? localStorage.getItem('currentTool') : 'pensil';
 let currentTool = 'pensil';
 let unSelectTools = unSelectPensil;
@@ -22,15 +24,19 @@ const canvas = document.getElementById("canvas");
 
 
 const ctx = canvas.getContext('2d');  
+//localStorage.getItem('image') ? drawImage(ctx, image): canvasClear();
 canvasClear();
 //--------panel-tools-------------
-function selectTool(tool) {  
-  document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
-   
-  unSelectTools();    
-  currentTool = tool;
-  document.querySelector(`.tools__item--${currentTool}`).classList.add('selected');
-  localStorage.setItem('currentTool', currentTool);
+function selectTool(tool) {
+  const toolEl = document.querySelector(`.tools__item--${tool}`);
+  if (toolEl) {
+    document.querySelector(`.tools__item--${currentTool}`).classList.remove('selected');
+    unSelectTools();
+    currentTool = tool;
+    toolEl.classList.add('selected');
+    localStorage.setItem('currentTool', currentTool);
+  }
+  
   switch(tool) {  
     case 'paint-bucket': {   
       selectPaintBucket();
@@ -55,6 +61,10 @@ function selectTool(tool) {
     case 'transform': {      
       selectTransform();
       unSelectTools = unSelectTransform; 
+      break;
+    }
+    case 'select-color': {
+      currentColorInput.click();
       break;
     }
     default: {
@@ -169,6 +179,7 @@ function unSelectPensil() {
 }
 
 function selectMove(){  
+  drawImage(ctx, image);
 }
 function unSelectMove(){}
 
@@ -218,6 +229,7 @@ function drawPensil(event) {
 
 function stopPensil() {
   isDrawing = false;  
+  saveImage();
 }
 
 function canvasClear() {
@@ -278,7 +290,8 @@ function drawImage(canvas, dataArray) {
 
     for (let row of dataArray) {
         for (let cell of row) {
-            drawPixel(canvas, x, y, sizePixel, cell);
+            drawPixel(ctx, x, y, pixelSize, currentColor);
+            //drawPixel(canvas, x, y, sizePixel, cell);
             x += sizePixel;
         }
         y += sizePixel;
@@ -300,6 +313,7 @@ function fill(x, y, oldColor, newColor){ // Функция заливки мно
     }
   }
 }
+/*
 function setHotKey(keyCode) {    
   switch(keyCode) {
     case 'KeyP': {      
@@ -317,4 +331,14 @@ function setHotKey(keyCode) {
     default:
   }
 }
-document.addEventListener('keydown', (event) => setHotKey(event.code));
+*/
+import setHotKey from './hotkey';
+document.addEventListener('keydown', (event) => selectTool(setHotKey(event.code)));
+
+function saveImage() {
+  localStorage.setItem('image', JSON.stringify(image));
+}
+
+function loadImage() {
+  return JSON.parse(localStorage.getItem('image'));
+}
