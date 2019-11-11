@@ -9,6 +9,9 @@ export default function setHotKey(keyCode) {
     case 'KeyC': {
       return 'select-color';
     }
+    case 'KeyS': {
+      return 'save';
+    }
     default:
   }
 }

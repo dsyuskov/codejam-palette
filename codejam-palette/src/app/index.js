@@ -2,11 +2,18 @@ import '../scss/main.scss';
 
 let canvasWidth = 512;
 let canvasHeight = 512;
-let canvasSize = localStorage.getItem('canvasSize') ? localStorage.getItem('canvasSize') : 4;
-let pixelSize = canvasWidth / canvasSize;
-let image = localStorage.getItem('image') ? loadImage(): [];
+let image = [];
+let canvasSize = 4;
 
-console.log(localStorage.getItem('image'));
+if (localStorage.getItem('image')) {
+  image = loadImage();
+  canvasSize = image.length;  
+} 
+
+let pixelSize = canvasWidth / canvasSize;
+//let canvasSize = localStorage.getItem('canvasSize') ? localStorage.getItem('canvasSize') : 4;
+
+//console.log(localStorage.getItem('image'));
 //let currentTool = localStorage.getItem('currentTool') ? localStorage.getItem('currentTool') : 'pensil';
 let currentTool = 'pensil';
 let unSelectTools = unSelectPensil;
@@ -24,8 +31,8 @@ const canvas = document.getElementById("canvas");
 
 
 const ctx = canvas.getContext('2d');  
-//localStorage.getItem('image') ? drawImage(ctx, image): canvasClear();
-canvasClear();
+localStorage.getItem('image') ? drawImage(ctx, image): canvasClear();
+//canvasClear();
 //--------panel-tools-------------
 function selectTool(tool) {
   const toolEl = document.querySelector(`.tools__item--${tool}`);
@@ -58,9 +65,9 @@ function selectTool(tool) {
       unSelectTools = unSelectMove;
       break;
     }
-    case 'transform': {      
-      selectTransform();
-      unSelectTools = unSelectTransform; 
+    case 'save': {      
+      selectSave();
+      unSelectTools = unSelectSave; 
       break;
     }
     case 'select-color': {
@@ -177,15 +184,16 @@ function unSelectPensil() {
   canvas.removeEventListener('mouseup', stopPensil);
   canvas.removeEventListener('mouseout', stopPensil);
 }
-
-function selectMove(){  
-  drawImage(ctx, image);
-}
+/*
+function selectMove(){}
 function unSelectMove(){}
-
-function selectTransform(){  
+*/
+function selectSave(){
+  saveImage();
 }
-function unSelectTransform(){}
+function unSelectSave(){}
+
+
 //-----------chooce-color----------
 function chooseColor(event){
   let {x, y} = getPos(event);
@@ -228,11 +236,11 @@ function drawPensil(event) {
 }
 
 function stopPensil() {
-  isDrawing = false;  
-  saveImage();
+  isDrawing = false;    
 }
 
 function canvasClear() {
+  image = [];
   for (let i = 0; i < canvasSize; i++){
     image[i] = [];
     for (let j = 0; j < canvasSize; j++){
@@ -240,12 +248,8 @@ function canvasClear() {
       drawPixel(ctx, i, j, pixelSize, '#ffffff')
     }
   }
+  saveImage();
 }
-
-const hex2rgba = (hex, alpha = 1) => {
-    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-    return `rgba(${r},${g},${b},${alpha})`;
-};
 
 function getPos(event) {
   let x = Math.floor(event.offsetX / pixelSize);
@@ -285,17 +289,14 @@ function drawImage(canvas, dataArray) {
     let sizePixel = 0;
     let x = 0;
     let y = 0;
-
-    sizePixel = 512 / dataArray.length;
-
-    for (let row of dataArray) {
-        for (let cell of row) {
-            drawPixel(ctx, x, y, pixelSize, currentColor);
-            //drawPixel(canvas, x, y, sizePixel, cell);
-            x += sizePixel;
-        }
-        y += sizePixel;
-        x = 0;
+    sizePixel = 512 / dataArray.length;    
+    for (let row of dataArray) {      
+      for (let cell of row) {        
+          drawPixel(canvas, y, x, sizePixel, cell);
+          x++;
+      }
+      y++;
+      x = 0;
     }
 }
 
